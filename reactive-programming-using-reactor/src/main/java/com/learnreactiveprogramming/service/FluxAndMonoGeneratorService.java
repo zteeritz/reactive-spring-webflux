@@ -19,17 +19,26 @@ public class FluxAndMonoGeneratorService {
                 .log();
     }
 
-    public Flux<String> namesFluxMap() {
+    public Flux<String> namesFluxMap(int stringLength) {
         return Flux.fromIterable(List.of("alex", "ben", "chloe"))
                 .map(String::toUpperCase)
+                .filter(name -> name.length() > stringLength)
+                .map(s -> s.length() + "-" + s)
                 .log();
+    }
+
+    public Flux<String> namesFluxImmutable() {
+        var namesFlux = Flux.fromIterable(List.of("alex", "ben", "chloe"));
+        return namesFlux.map(String::toLowerCase);
     }
 
     public static void main(String[] args) {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
-        fluxAndMonoGeneratorService.namesFlux().subscribe(name -> System.out.println("Name is: " + name));
-        fluxAndMonoGeneratorService.nameMono().subscribe(name -> System.out.println("Mono name is: " + name));
-
-        fluxAndMonoGeneratorService.namesFluxMap().subscribe(name -> System.out.println("Name is: " + name));
+        fluxAndMonoGeneratorService.namesFlux()
+                .subscribe(name -> System.out.println("Name is: " + name));
+        fluxAndMonoGeneratorService.nameMono()
+                .subscribe(name -> System.out.println("Mono name is: " + name));
+        fluxAndMonoGeneratorService.namesFluxMap(2)
+                .subscribe(name -> System.out.println("Name is: " + name));
     }
 }

@@ -23,12 +23,26 @@ class FluxAndMonoGeneratorServiceTest {
 
     @Test
     void namesFluxMap() {
-        var namesFluxMap = fluxAndMonoGeneratorService.namesFluxMap();
+
+        int stringLength = 2;
+
+        var namesFluxMap = fluxAndMonoGeneratorService.namesFluxMap(stringLength);
 
         StepVerifier.create(namesFluxMap)
-                .expectNext("ALEX")
-                .expectNext("BEN")
-                .expectNext("CHLOE")
+                .expectNext("4-ALEX")
+                .expectNext("3-BEN")
+                .expectNext("5-CHLOE")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesFluxImmutable() {
+        var namesFluxImmutable = fluxAndMonoGeneratorService.namesFluxImmutable();
+
+        StepVerifier.create(namesFluxImmutable)
+                .expectNext("alex")
+                .expectNext("ben")
+                .expectNext("chloe")
                 .verifyComplete();
     }
 }
