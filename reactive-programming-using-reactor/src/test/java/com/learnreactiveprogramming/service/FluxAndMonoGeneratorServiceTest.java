@@ -45,4 +45,21 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("chloe")
                 .verifyComplete();
     }
+
+    @Test
+    void namesFluxFlatMap() {
+        var namesFluxFlatMap = fluxAndMonoGeneratorService.namesFluxFlatMap(3);
+
+        StepVerifier.create(namesFluxFlatMap)
+                .expectNext("A")
+                .expectNext("L")
+                .expectNext("E")
+                .expectNext("X")
+                .expectNext("C")
+                .expectNext("H")
+                .expectNext("L")
+                .expectNext("O")
+                .expectNext("E")
+                .verifyComplete();
+    }
 }

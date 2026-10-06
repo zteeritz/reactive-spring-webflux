@@ -32,6 +32,20 @@ public class FluxAndMonoGeneratorService {
         return namesFlux.map(String::toLowerCase);
     }
 
+    public Flux<String> namesFluxFlatMap(int stringLength) {
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .map(String::toUpperCase)
+                .filter(name -> name.length() > stringLength)
+                .flatMap(this::splitString) // A, L, E, X ...
+                .log();
+    }
+
+    public Flux<String> splitString(String name) {
+        var charArray = name.split("");
+        return Flux.fromArray(charArray);
+    }
+
+
     public static void main(String[] args) {
         FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
         fluxAndMonoGeneratorService.namesFlux()
@@ -39,6 +53,9 @@ public class FluxAndMonoGeneratorService {
         fluxAndMonoGeneratorService.nameMono()
                 .subscribe(name -> System.out.println("Mono name is: " + name));
         fluxAndMonoGeneratorService.namesFluxMap(2)
+                .subscribe(name -> System.out.println("Name is: " + name));
+
+        fluxAndMonoGeneratorService.namesFluxFlatMap(2)
                 .subscribe(name -> System.out.println("Name is: " + name));
     }
 }
