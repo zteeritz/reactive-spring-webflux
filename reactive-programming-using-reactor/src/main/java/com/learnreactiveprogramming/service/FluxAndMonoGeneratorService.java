@@ -136,9 +136,48 @@ public class FluxAndMonoGeneratorService {
     }
 
     public Flux<String> exploreMergeWithMono() {
+        // publisher
         var aMono = Flux.just("A");
+        // publisher
         var bMono = Flux.just("B");
         return aMono.mergeWith(bMono).log();
+    }
+
+    public Flux<String> exploreMergeSequential() {
+        var abcFlux = Flux.just("A", "B", "C")
+                .delayElements(Duration.ofMillis(100));
+        var defFlux = Flux.just("D", "E", "F")
+                .delayElements(Duration.ofMillis(125));
+        return Flux.mergeSequential(abcFlux, defFlux).log();
+    }
+
+    public Flux<String> exploreZip() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        return Flux.zip(abcFlux, defFlux, (first, second) -> first + second);
+    }
+
+    public Flux<String> exploreZipTuple4() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        var _123Flux = Flux.just("1", "2", "3");
+        var _456Flux = Flux.just("4", "5", "6");
+
+        return Flux.zip(abcFlux, defFlux, _123Flux, _456Flux)
+                .map(t4 -> t4.getT1() + t4.getT2() + t4.getT3() + t4.getT4())
+                .log();
+    }
+
+    public Flux<String> exploreZipWith() {
+        var abcFlux = Flux.just("A", "B", "C");
+        var defFlux = Flux.just("D", "E", "F");
+        return abcFlux.zipWith(defFlux, (first, second) -> first + second).log();
+    }
+
+    public Flux<String> exploreZipWithMono() {
+        var abcFlux = Flux.just("A");
+        var defMono = Mono.just("B");
+        return abcFlux.zipWith(defMono, (first, second) -> first + second).log();
     }
 
     public static void main(String[] args) {
