@@ -99,4 +99,16 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext(List.of("A", "L", "E", "X"))
                 .verifyComplete();
     }
+
+    @Test
+    void namesMonoFlatMapMany() {
+        var namesMonoFlatMapMany = fluxAndMonoGeneratorService.namesMonoFlatMapMany(2);
+
+        StepVerifier.create(namesMonoFlatMapMany)
+                .expectNext("A")
+                .expectNext("L")
+                .expectNext("E")
+                .expectNext("X")
+                .verifyComplete();
+    }
 }
