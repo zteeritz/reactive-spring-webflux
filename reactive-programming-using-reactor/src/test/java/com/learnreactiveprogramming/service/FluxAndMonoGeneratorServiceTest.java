@@ -111,4 +111,45 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("X")
                 .verifyComplete();
     }
+
+    @Test
+    void namesFluxTransform() {
+        var namesFluxTransform = fluxAndMonoGeneratorService.namesFluxTransform(2);
+
+        StepVerifier.create(namesFluxTransform)
+                .expectNext("4-ALEX")
+                .expectNext("3-BEN")
+                .expectNext("5-CHLOE")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesTransformDefault() {
+        var namesFluxTransform = fluxAndMonoGeneratorService.namesFluxTransform(10);
+
+        StepVerifier.create(namesFluxTransform)
+                .expectNext("default")
+                .verifyComplete();
+    }
+
+    @Test
+    void namesTransformSwitchIfEmpty() {
+        var namesFluxTransform = fluxAndMonoGeneratorService
+                .namesFluxTransformSwitchEmpty(6);
+
+        StepVerifier.create(namesFluxTransform)
+                .expectNext("D", "E", "F", "A", "U", "L", "T")
+                .verifyComplete();
+    }
+
+    @Test
+    void exploreConcat() {
+        var namesConcat = fluxAndMonoGeneratorService.exploreConcat();
+        StepVerifier.create(namesConcat)
+                .expectNext("alex")
+                .expectNext("alex")
+                .expectNext("ben")
+                .expectNext("chloe")
+                .verifyComplete();
+    }
 }

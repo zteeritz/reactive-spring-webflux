@@ -5,6 +5,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 public class FluxAndMonoGeneratorService {
 
@@ -85,6 +86,45 @@ public class FluxAndMonoGeneratorService {
                 .filter(name -> name.length() > stringLength)
                 .flatMapMany(this::splitString)
                 .log();
+    }
+
+    public Flux<String> namesFluxTransform(int stringLength) {
+        Function<Flux<String>, Flux<String>> transformFunction = namesFlux -> namesFlux
+                .map(String::toUpperCase)
+                .filter(name -> name.length() > stringLength)
+                .flatMap(this::splitString);
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .transform(transformFunction)
+                .defaultIfEmpty("default")
+                .log();
+    }
+
+    public Flux<String> namesFluxTransformSwitchEmpty(int stringLength) {
+        Function<Flux<String>, Flux<String>> transformFunction = namesFlux -> namesFlux
+                .map(String::toUpperCase)
+                .filter(name -> name.length() > stringLength)
+                .flatMap(this::splitString);
+
+        Flux<String> defaultFlux = Flux.just("default")
+                .transform(transformFunction);
+
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+                .transform(transformFunction)
+                .switchIfEmpty(defaultFlux)
+                .log();
+    }
+
+    public Flux<String> exploreConcat() {
+        return Flux.concat(nameMono(), namesFlux())
+                .log();
+    }
+
+    public Flux<String> exploreConcatWith() {
+        var aMono = Mono.just("a");
+        var bMono = Mono.just("b");
+
+        return aMono.concatWith(bMono).log();
     }
 
     public static void main(String[] args) {
