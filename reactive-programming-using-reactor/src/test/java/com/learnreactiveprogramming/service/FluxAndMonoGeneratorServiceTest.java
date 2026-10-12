@@ -117,9 +117,18 @@ class FluxAndMonoGeneratorServiceTest {
         var namesFluxTransform = fluxAndMonoGeneratorService.namesFluxTransform(2);
 
         StepVerifier.create(namesFluxTransform)
-                .expectNext("4-ALEX")
-                .expectNext("3-BEN")
-                .expectNext("5-CHLOE")
+                .expectNext("A")
+                .expectNext("L")
+                .expectNext("E")
+                .expectNext("X")
+                .expectNext("B")
+                .expectNext("E")
+                .expectNext("N")
+                .expectNext("C")
+                .expectNext("H")
+                .expectNext("L")
+                .expectNext("O")
+                .expectNext("E")
                 .verifyComplete();
     }
 
@@ -150,6 +159,14 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("alex")
                 .expectNext("ben")
                 .expectNext("chloe")
+                .verifyComplete();
+    }
+
+    @Test
+    void exploreMerge() {
+        var value = fluxAndMonoGeneratorService.exploreMerge();
+        StepVerifier.create(value)
+                .expectNext("A", "D", "B", "E", "C", "F")
                 .verifyComplete();
     }
 }
